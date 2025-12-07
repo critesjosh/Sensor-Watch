@@ -152,7 +152,7 @@ inline void watch_enable_buzzer(void) {
 
 inline void watch_set_buzzer_period(uint32_t period) {
     hri_tcc_write_PERBUF_reg(TCC0, period);
-    hri_tcc_write_CCBUF_reg(TCC0, WATCH_BUZZER_TCC_CHANNEL, period / 2);
+    hri_tcc_write_CCBUF_reg(TCC0, WATCH_BUZZER_TCC_CHANNEL, period / 32);
 }
 
 void watch_disable_buzzer(void) {
@@ -162,6 +162,8 @@ void watch_disable_buzzer(void) {
 inline void watch_set_buzzer_on(void) {
     gpio_set_pin_direction(BUZZER, GPIO_DIRECTION_OUT);
     gpio_set_pin_function(BUZZER, WATCH_BUZZER_TCC_PINMUX);
+    // Use normal (lower) drive strength for quieter buzzer
+    PORT->Group[0].PINCFG[27].bit.DRVSTR = 0;
 }
 
 inline void watch_set_buzzer_off(void) {
